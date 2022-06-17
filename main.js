@@ -5,7 +5,9 @@ leftWristY = 0;
 rightWristX = 0;
 rightWristY = 0;
 leftWristScore = 0;
-Status = "";
+status1 = "";
+rightWristScore = 0;
+status2 = 0;
 
 function preload() {
     song1 = loadSound("music.mp3");
@@ -26,19 +28,34 @@ function modelLoaded() {
 
 function draw() {
     image(video, 0, 0, 600, 500);
+    fill("red");
     stroke("red");
-
-    Status = song1.isPlaying();
-    console.log("Status = " + Status);
+    status1 = song1.isPlaying();
+    console.log("status1 = " + status1);
 
     if (leftWristScore >= 0.2) {
         circle(leftWristX, leftWristY, 20);
         song2._stop();
+
+        if (status1 == false) {
+            song1.play();
+            document.getElementById("songs").innerHTML = "Song: Harry Porter Theme";
+        }
     }
 
-    if(Status = false){
-        song1.play();
+    status2 = song2.isPlaying();
+    console.log("status2 = " + status2);
+
+    if (rightWristScore >= 0.2) {
+        circle(rightWristX, rightWristY, 20);
+        song1.stop();
+
+        if (status2 == false) {
+            song2.play();
+            document.getElementById("songs").innerHTML = "Song: Peter Pan Theme"
+        }
     }
+
 
 }
 function gotPoses(result) {
@@ -51,7 +68,15 @@ function gotPoses(result) {
         console.log(" leftWristX = " + leftWristX + " leftWristY = " + leftWristY);
         console.log(" rightWristX = " + rightWristX + " rightWristY = " + rightWristY);
 
-        result[0].pose.keypoints[9].score;
-        leftWristScore = 1;
+        leftWristScore = result[0].pose.keypoints[9].score;
+        console.log("leftWristScore = " + leftWristScore);
+
+        rightWristScore = result[0].pose.keypoints[10].score;
+        console.log("rightWristScore = " + rightWristScore);
     }
+}
+
+function stopSong(){
+    song1.pause();
+    song2.pause();
 }
